@@ -1,15 +1,14 @@
 package xyz.dimeng.maker;
 
-//import xyz.dimeng.maker.cli.CommandExecutor;
+import freemarker.template.TemplateException;
+import xyz.dimeng.maker.generator.main.MainGenerator;
 
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
+import java.io.IOException;
+
 public class Main {
-    public static void main(String[] args) {
-//        args=new String[]{"generate","-l","-a","-o"};
-//        args = new String[]{"config"};
-//        args = new String[]{"list"};
-//        CommandExecutor commandExecutor = new CommandExecutor();
-//        commandExecutor.doExecute(args);
+    public static void main(String[] args) throws TemplateException, IOException, InterruptedException {
+        MainGenerator mainGenerator = new MainGenerator();
+        args = new String[]{"generate","--needGit=true"};
+        mainGenerator.doGenerate();
     }
 }
