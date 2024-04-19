@@ -13,15 +13,78 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
 
 public class TemplateMakerTest {
-
+    /**
+     * 测试相同配置多次生成时，强制变为静态生成
+     */
     @Test
-    public void makeTemplate() {
+    public void testMakeTemplateBug1() {
+        Meta meta = new Meta();
+        meta.setName("acm-template-generator");
+        meta.setDescription("ACM 示例模板生成器");
+
+        String projectPath = System.getProperty("user.dir");
+        String originProjectPath = new File(projectPath).getParent() + File.separator + "qxp-generator-demo-projects/springboot-init";
+
+        // 文件参数配置
+        String inputFilePath1 = "src/main/resources/application.yml";
+        TemplateMakerFileConfig templateMakerFileConfig = new TemplateMakerFileConfig();
+        TemplateMakerFileConfig.FileInfoConfig fileInfoConfig1 = new TemplateMakerFileConfig.FileInfoConfig();
+        fileInfoConfig1.setPath(inputFilePath1);
+        templateMakerFileConfig.setFiles(Arrays.asList(fileInfoConfig1));
+
+        // 模型参数配置
+        TemplateMakerModelConfig templateMakerModelConfig = new TemplateMakerModelConfig();
+        TemplateMakerModelConfig.ModelInfoConfig modelInfoConfig1 = new TemplateMakerModelConfig.ModelInfoConfig();
+        modelInfoConfig1.setFieldName("url");
+        modelInfoConfig1.setType("String");
+        modelInfoConfig1.setDefaultValue("jdbc:mysql://localhost:3306/my_db");
+        modelInfoConfig1.setReplaceText("jdbc:mysql://localhost:3306/my_db");
+        List<TemplateMakerModelConfig.ModelInfoConfig> modelInfoConfigList = Arrays.asList(modelInfoConfig1);
+        templateMakerModelConfig.setModels(modelInfoConfigList);
+
+        long id = TemplateMaker.makeTemplate(meta, originProjectPath, templateMakerFileConfig, templateMakerModelConfig,1L);
+        System.out.println(id);
+    }
+    /***
+    * @description 过滤生成的模板文件,减少重复生成
+    *
+    * @return void
+    * @author 乔晓扑
+    * @date 2024/4/19 16:13
+    */
+    @Test
+    public void testMakeTemplateBug2() {
+        Meta meta = new Meta();
+        meta.setName("acm-template-generator");
+        meta.setDescription("ACM 示例模板生成器");
+
+        String projectPath = System.getProperty("user.dir");
+        String originProjectPath = new File(projectPath).getParent() + File.separator + "qxp-generator-demo-projects/springboot-init";
+
+        // 文件参数配置
+//        String inputFilePath1 = "src/main/resources/application.yml";
+        String inputFilePath1 = "./";
+        TemplateMakerFileConfig templateMakerFileConfig = new TemplateMakerFileConfig();
+        TemplateMakerFileConfig.FileInfoConfig fileInfoConfig1 = new TemplateMakerFileConfig.FileInfoConfig();
+        fileInfoConfig1.setPath(inputFilePath1);
+        templateMakerFileConfig.setFiles(Arrays.asList(fileInfoConfig1));
+
+        // 模型参数配置
+        TemplateMakerModelConfig templateMakerModelConfig = new TemplateMakerModelConfig();
+        TemplateMakerModelConfig.ModelInfoConfig modelInfoConfig1 = new TemplateMakerModelConfig.ModelInfoConfig();
+        modelInfoConfig1.setFieldName("className");
+        modelInfoConfig1.setType("String");
+        modelInfoConfig1.setReplaceText("BaseResponse");
+        List<TemplateMakerModelConfig.ModelInfoConfig> modelInfoConfigList = Arrays.asList(modelInfoConfig1);
+        templateMakerModelConfig.setModels(modelInfoConfigList);
+
+        long id = TemplateMaker.makeTemplate(meta, originProjectPath, templateMakerFileConfig, templateMakerModelConfig,1L);
+        System.out.println(id);
     }
     @Test
-    public static void testMakeTemplateBug1() {
+    public void testMakeTemplateBug21() {
         Meta meta = new Meta();
         meta.setName("acm-template-pro-generator");
         meta.setDescription("ACM 示例模板生成器");
@@ -33,20 +96,9 @@ public class TemplateMakerTest {
         String fileInputPath1 = "src/main/java/com/yupi/springbootinit/common";
         String fileInputPath2 = "src/main/resources/application.yml";
 
-
-
-
-//        List<String> fileInputPathList = Arrays.asList(fileInputPath1,fileInputPath2);
-        //1.3 输入模型参数信息
-//        Meta.ModelConfig.ModelInfo modelInfo = new Meta.ModelConfig.ModelInfo();
-//        modelInfo.setFieldName("outputText");
-//        modelInfo.setType("String");
-//        modelInfo.setDefaultValue("sum = ");
         Meta.ModelConfig.ModelInfo modelInfo = new Meta.ModelConfig.ModelInfo();
         modelInfo.setFieldName("className");
         modelInfo.setType("String");
-
-//        String searchStr = "Sum: ";
         String searchStr = "BaseResponse";
         TemplateMakerFileConfig.FileInfoConfig fileInfoConfig = new TemplateMakerFileConfig.FileInfoConfig();
         fileInfoConfig.setPath(fileInputPath1);
@@ -99,4 +151,5 @@ public class TemplateMakerTest {
         long id = TemplateMaker.makeTemplate(meta, originProjectPath, templateMakerFileConfig, templateMakerModelConfig, 1780479026361851904L);
         System.out.println(id);
     }
+
 }
