@@ -30,7 +30,10 @@ public class TemplateMakerModelConfig {
         private String groupKey;
         private String groupName;
         private String type;
+<<<<<<< HEAD
 
+=======
+>>>>>>> dev
         private String description;
     }
 }
